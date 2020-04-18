@@ -1,9 +1,10 @@
 class Game < ApplicationRecord
-  before_create :set_hashed_id
+  before_create :set_room_code
+  has_many :players
 
   private
 
-  def set_hashed_id
-    self.hashed_id = SecureRandom.alphanumeric(10)
+  def set_room_code
+    self.room_code = SecureRandom.alphanumeric(5)
   end
 end
