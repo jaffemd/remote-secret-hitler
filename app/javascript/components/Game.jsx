@@ -55,7 +55,7 @@ const Game = () => {
     <div className="game">
       {!player && (
         <div className="enter-name">
-          <span>Enter your name: </span>
+          <div>Enter your name: </div>
           <Input
             type="text"
             placeholder="Name"
