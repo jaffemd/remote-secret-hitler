@@ -14,19 +14,37 @@
  *= require_self
  */
 
+ .container {
+   padding: 20px;
+ }
+
 .home {
-  padding: 20px;
   display: grid;
+  grid-row-gap: 10px;
   justify-content: center;
 }
 
 .game {
-  padding: 20px;
   display: grid;
   grid-row-gap: 20px;
 }
 
 .enter-name {
+  display: grid;
+  grid-row-gap: 5px;
+  justify-content: start;
+  align-items: center;
+}
+
+.home-enter-name {
+  display: grid;
+  margin-bottom: 20px;
+  grid-row-gap: 5px;
+  justify-content: start;
+  align-items: center;
+}
+
+.join-game {
   display: grid;
   grid-row-gap: 5px;
   justify-content: start;
@@ -41,12 +59,29 @@
   align-items: center;
 }
 
-.host {
+.bold-navy {
   font-weight: bold;
   color: #070d78;
 }
 
 .you {
   font-weight: bold;
+  color: #ad0c00;
+}
+
+.or {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.hitler-header {
+  display: flex;
+  justify-content: center;
+}
+
+.join-error {
+  display: flex;
+  justify-content: center;
   color: #ad0c00;
 }

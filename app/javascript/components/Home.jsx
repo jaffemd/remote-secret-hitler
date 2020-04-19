@@ -1,15 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { Button } from 'semantic-ui-react';
+import { Button, Input } from 'semantic-ui-react';
+import useLocalStorage from './hooks/useLocalStorage';
 
 const Home = () => {
   const [game, setGame] = useState();
+  const [name, setName] = useState();
+  const [roomCode, setRoomCode] = useState();
+  const [error, setError] = useState();
   const history = useHistory();
+  const [playerCookie, setPlayerCookie] = useLocalStorage('remote-secret-hitler');
 
-  const handleClick = () => {
-    fetch('/api/v1/games', { method: 'post' })
-      .then(response => response.json())
-      .then(data => setGame(data));
+  const handleCreateClick = () => {
+    const data = { name };
+    fetch('/api/v1/games', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(response => response.json())
+      .then(data => {
+        if (data.player) {
+          setPlayerCookie({ [data.game.room_code]: data.player });
+        }
+        setGame(data.game);
+      });
   };
 
   useEffect(() => {
@@ -18,12 +34,64 @@ const Home = () => {
     }
   }, [game]);
 
+  const handleSubmit = () => {
+    const data = { name, room_code: roomCode };
+    fetch('/api/v1/games/join', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setPlayerCookie({ [roomCode]: data.player });
+          history.push(`/play/${roomCode}`);
+        }
+      });
+  };
+
   return (
     <div className="home">
-      <h3>
-        Secret Hitler Helper
+      <h3 className="hitler-header">
+        Remote Secret Hitler
       </h3>
-      <Button primary onClick={handleClick}>
+      <div className="home-enter-name">
+        <div>Enter your name: </div>
+        <Input
+          type="text"
+          placeholder="Name"
+          size="small"
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div className="join-game">
+        <div>Join an existing game: </div>
+        <Input
+          type="text"
+          placeholder="Enter 5 digit room code"
+          size="small"
+          onChange={(e) => setRoomCode(e.target.value)}
+          action={{
+            onClick: handleSubmit,
+            content: 'Join',
+            color: 'green',
+            disabled: !name && !roomCode,
+          }}
+        />
+        {error && (
+          <div className="join-error">
+            {error}
+          </div>
+        )}
+      </div>
+      <div className="or">
+        OR
+      </div>
+      <Button primary onClick={handleCreateClick} disabled={!name}>
         Create a new game
       </Button>
     </div>

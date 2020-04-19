@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input } from 'semantic-ui-react';
+import { Button, Input, Icon } from 'semantic-ui-react';
 import { useParams } from "react-router-dom";
+import copy from 'copy-to-clipboard';
 import useInterval from './hooks/useInterval';
 import useLocalStorage from './hooks/useLocalStorage';
 import Players from './Players';
+import Role from './Role';
 
 const Game = () => {
   const { id: roomCode } = useParams();
   const [name, setName] = useState('');
   const [game, setGame] = useState();
 
-  const [playerCookie, setPlayerCookie] = useLocalStorage(roomCode, { [roomCode]: null });
-  console.log('playerCookie', playerCookie);
-  const player = playerCookie[roomCode];
+  const [playerCookie, setPlayerCookie] = useLocalStorage('remote-secret-hitler', { [roomCode]: null });
+  const cachedPlayer = playerCookie[roomCode];
+  const player = game && cachedPlayer && game.players.find(p => p.id === cachedPlayer.id);
+
+  const host = player?.host;
+  const numPlayers = (game?.players || []).length;
 
 
   const fetchGame = () => {
@@ -51,11 +56,35 @@ const Game = () => {
       });
   };
 
+  const invite = () => {
+    copy(`Join my secret hitler game! Room Code: ${roomCode} ${window.location.href}`);
+  };
+
+  const startGame = () => {
+    if (numPlayers >= 5 && numPlayers <= 10) {
+      fetch(`/api/v1/games/${roomCode}/start`, { method: 'PUT' })
+        .then(response => response.json())
+        .then(data => setGame(data));
+    }
+  }
+
+  const inProgress = game?.in_progress;
+
   return (
     <div className="game">
-      {!player && (
+      <h3 className="hitler-header">
+        Remote Secret Hitler
+      </h3>
+      {player && <Role player={player} />}
+      {player && !inProgress && (
+        <Button icon labelPosition='right' onClick={invite}>
+          Copy Invite Link
+          <Icon name='copy' />
+        </Button>
+      )}
+      {!player && !inProgress && (
         <div className="enter-name">
-          <div>Enter your name: </div>
+          <div>Join the action! Enter your name: </div>
           <Input
             type="text"
             placeholder="Name"
@@ -68,6 +97,16 @@ const Game = () => {
             }}
           />
         </div>
+      )}
+      {player && !host && !inProgress && (
+        <div>
+          Waiting for host to start the game...
+        </div>
+      )}
+      {host && !inProgress && (
+        <Button primary disabled={numPlayers < 5} onClick={startGame}>
+          Start Game
+        </Button>
       )}
       <div className="players-table">
         <Players game={game} player={player} />

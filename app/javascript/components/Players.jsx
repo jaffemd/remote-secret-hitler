@@ -24,7 +24,7 @@ const Players = ({ game, player }) => (
                   </span>
                 )}
                 {host && (
-                  <span className="host">
+                  <span className="bold-navy">
                     Host
                   </span>
                 )}
