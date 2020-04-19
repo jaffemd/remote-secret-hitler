@@ -11,7 +11,7 @@ const Role = ({ player }) => {
     setActiveIndex(newIndex);
   };
 
-  return (
+  return player?.party && (
     <div className="role-accordion">
       <Accordion fluid styled>
         <Accordion.Title
