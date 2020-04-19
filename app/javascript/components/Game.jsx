@@ -62,7 +62,12 @@ const Game = () => {
 
   const startGame = () => {
     if (numPlayers >= 5 && numPlayers <= 10) {
-      fetch(`/api/v1/games/${roomCode}/start`, { method: 'PUT' })
+      fetch(`/api/v1/games/${roomCode}/start`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
         .then(response => response.json())
         .then(data => setGame(data));
     }
