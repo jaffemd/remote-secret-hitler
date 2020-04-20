@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Input, Icon } from 'semantic-ui-react';
-import { useParams } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 import copy from 'copy-to-clipboard';
 import useInterval from './hooks/useInterval';
 import useLocalStorage from './hooks/useLocalStorage';
 import Players from './Players';
 import Role from './Role';
+import Voting from './Voting';
 
 const Game = () => {
   const { id: roomCode } = useParams();
@@ -19,14 +20,13 @@ const Game = () => {
   const host = player?.host;
   const numPlayers = (game?.players || []).length;
 
-
   const fetchGame = () => {
     if (roomCode) {
       fetch(`/api/v1/games/${roomCode}`)
         .then(response => response.json())
         .then(data => setGame(data));
     }
-  }
+  };
 
   useEffect(() => {
     if (roomCode) {
@@ -34,23 +34,23 @@ const Game = () => {
     }
   }, [roomCode]);
 
-  useInterval(fetchGame, 5000);
+  useInterval(fetchGame, 7000);
 
   const handleChange = (e) => {
     setName(e.target.value);
   };
 
   const handleSubmit = () => {
-    const data = { name, room_code: roomCode };
+    const formData = { name, room_code: roomCode };
     fetch('/api/v1/players', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(formData),
     })
       .then(response => response.json())
-      .then(data => {
+      .then((data) => {
         setPlayerCookie({ [roomCode]: data });
         fetchGame();
       });
@@ -71,20 +71,36 @@ const Game = () => {
         .then(response => response.json())
         .then(data => setGame(data));
     }
-  }
+  };
 
-  const inProgress = game?.in_progress;
+  const openVoting = () => {
+    fetch(`/api/v1/games/${roomCode}/open_voting`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => setGame(data));
+  };
+
+  const { voting, in_progress: inProgress } = game || {};
 
   return (
     <div className="game">
       <h3 className="hitler-header">
         Remote Secret Hitler
       </h3>
-      {player && <Role player={player} />}
+      {player && inProgress && (
+        <Role
+          player={player}
+          players={game?.players || []}
+        />
+      )}
       {player && !inProgress && (
-        <Button icon labelPosition='right' onClick={invite}>
+        <Button icon labelPosition="right" onClick={invite}>
           Copy Invite Link
-          <Icon name='copy' />
+          <Icon name="copy" />
         </Button>
       )}
       {!player && !inProgress && (
@@ -112,6 +128,14 @@ const Game = () => {
         <Button primary disabled={numPlayers < 5} onClick={startGame}>
           Start Game
         </Button>
+      )}
+      {host && inProgress && !voting && (
+        <Button color="green" onClick={openVoting}>
+          Open Voting
+        </Button>
+      )}
+      {voting && (
+        <Voting setGame={setGame} playerId={player?.id} />
       )}
       <div className="players-table">
         <Players game={game} player={player} />

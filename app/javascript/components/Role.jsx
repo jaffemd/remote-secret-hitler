@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Accordion, Icon } from 'semantic-ui-react';
 
-const Role = ({ player }) => {
+const Role = ({ player, players }) => {
   const [activeIndex, setActiveIndex] = useState(-1);
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -10,6 +10,13 @@ const Role = ({ player }) => {
 
     setActiveIndex(newIndex);
   };
+
+  const otherFascists = players.filter(p => (p.party === 'Fascist' && p.id !== player.id));
+  const otherFascistsString = otherFascists.map(f => (
+    f.role === 'Hitler' ? `${f.name} (Hitler)` : f.name
+  )).join(', ');
+  const showFascists = player?.party === 'Fascist'
+    && (player?.role !== 'Hitler' || players.length < 7);
 
   return player?.party && (
     <div className="role-accordion">
@@ -29,6 +36,11 @@ const Role = ({ player }) => {
           <div>
             {`Role: ${player.role}`}
           </div>
+          {showFascists && (
+            <div>
+              {`Other Fascists: ${otherFascistsString}`}
+            </div>
+          )}
         </Accordion.Content>
       </Accordion>
     </div>
@@ -43,6 +55,7 @@ Role.propTypes = {
     role: PropTypes.string,
     party: PropTypes.string,
   }).isRequired,
+  players: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Role;

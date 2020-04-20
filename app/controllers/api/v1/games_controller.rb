@@ -16,6 +16,13 @@ class Api::V1::GamesController < ApplicationController
     render json: game.to_json(include: :players)
   end
 
+  def open_voting
+    room_code = params[:id]
+    game = Game.find_by(room_code: room_code)
+    game.open_voting
+    render json: game.to_json(include: :players)
+  end
+
   def join
     game = Game.find_by(room_code: params[:room_code])
     if !game

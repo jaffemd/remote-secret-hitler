@@ -85,3 +85,13 @@
   justify-content: center;
   color: #ad0c00;
 }
+
+.bold {
+  font-weight: bold;
+}
+
+.voting {
+  display: grid;
+  width: 100%;
+  grid-row-gap: 10px;
+}
