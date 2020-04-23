@@ -146,6 +146,13 @@ const Game = () => {
           {vote_result === 'pass' ? 'Vote Passed!' : 'Vote Failed'}
         </div>
       )}
+      {legislative_session && (
+        <div>
+          {draw.length === 3
+            ? 'Waiting for the president to discard a policy'
+            : 'Waiting for the chancellor to choose a policy'}
+        </div>
+      )}
       <div className="players-table">
         <Players game={game} player={player} />
       </div>
