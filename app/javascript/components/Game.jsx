@@ -7,6 +7,9 @@ import useLocalStorage from './hooks/useLocalStorage';
 import Players from './Players';
 import Role from './Role';
 import Voting from './Voting';
+import GameState from './GameState';
+import ElectionSetup from './ElectionSetup';
+import Policies from './Policies';
 
 const Game = () => {
   const { id: roomCode } = useParams();
@@ -18,7 +21,8 @@ const Game = () => {
   const player = game && cachedPlayer && game.players.find(p => p.id === cachedPlayer.id);
 
   const host = player?.host;
-  const numPlayers = (game?.players || []).length;
+  const players = game?.players || [];
+  const numPlayers = players.length;
 
   const fetchGame = () => {
     if (roomCode) {
@@ -73,18 +77,18 @@ const Game = () => {
     }
   };
 
-  const openVoting = () => {
-    fetch(`/api/v1/games/${roomCode}/open_voting`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then(data => setGame(data));
-  };
+  const {
+    voting,
+    vote_result,
+    in_progress: inProgress,
+    legislative_session,
+    draw,
+  } = game || {};
 
-  const { voting, in_progress: inProgress } = game || {};
+  const showPolicyDraw = legislative_session && (
+    (player?.president && draw?.length === 3)
+    || (player?.chancellor && draw?.length === 2)
+  );
 
   return (
     <div className="game">
@@ -97,6 +101,8 @@ const Game = () => {
           players={game?.players || []}
         />
       )}
+      {showPolicyDraw && <Policies game={game} setGame={setGame} />}
+      {inProgress && <GameState game={game} />}
       {player && !inProgress && (
         <Button icon labelPosition="right" onClick={invite}>
           Copy Invite Link
@@ -129,13 +135,16 @@ const Game = () => {
           Start Game
         </Button>
       )}
-      {host && inProgress && !voting && (
-        <Button color="green" onClick={openVoting}>
-          Open Voting
-        </Button>
+      {host && inProgress && !voting && !legislative_session && (
+        <ElectionSetup game={game} setGame={setGame} />
       )}
       {voting && (
         <Voting setGame={setGame} playerId={player?.id} />
+      )}
+      {vote_result && (
+        <div>
+          {vote_result === 'pass' ? 'Vote Passed!' : 'Vote Failed'}
+        </div>
       )}
       <div className="players-table">
         <Players game={game} player={player} />

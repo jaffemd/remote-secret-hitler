@@ -26,7 +26,13 @@
 
 .game {
   display: grid;
+  max-width: 500px;
+  margin: auto;
   grid-row-gap: 20px;
+}
+
+div.ui.segment {
+  margin: 0;
 }
 
 .enter-name {
@@ -59,12 +65,16 @@
   align-items: center;
 }
 
+.player-government-role {
+  font-weight: bold;
+}
+
 .bold-navy {
   font-weight: bold;
   color: #070d78;
 }
 
-.you {
+.bold-red {
   font-weight: bold;
   color: #ad0c00;
 }
@@ -94,4 +104,100 @@
   display: grid;
   width: 100%;
   grid-row-gap: 10px;
+}
+
+.policies-header {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.policies {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.deck {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.election-setup {
+  display: grid;
+  grid-row-gap: 10px;
+}
+
+.policy-card {
+  display: grid;
+  height: 110px;
+  width: 80px;
+  grid-template-rows: 2fr 1fr;
+
+  font-size: 20px;
+  font-family: 'Germania One', cursive;
+
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+}
+
+.policy-label { align-self: start; }
+
+.liberal {
+  color: #2391cc;
+}
+
+.fascist {
+  color: #e34017;
+}
+
+.ui.basic.button.card-button {
+  display: flex;
+  height: 110px;
+  width: 80px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid gray;
+  border-radius: 10px;
+}
+
+.ui.basic.button.card-button.selected {
+  border: 4px solid gray;
+}
+.ui.basic.button.card-button.liberal {
+  border-color: #2391cc;
+}
+.ui.basic.button.card-button.fascist {
+  border-color: #e34017;
+}
+
+.policy-draw {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  grid-auto-columns: 1fr 1fr;
+}
+
+.policy-container {
+  display: grid;
+  grid-row-gap: 10px;
+}
+
+.policy-header {
+  text-align: center;
+  font-weight: bold;
+}
+
+
+.emoji {
+  font-size: 40px;
 }

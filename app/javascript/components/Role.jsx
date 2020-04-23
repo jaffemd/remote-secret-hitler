@@ -19,31 +19,29 @@ const Role = ({ player, players }) => {
     && (player?.role !== 'Hitler' || players.length < 7);
 
   return player?.party && (
-    <div className="role-accordion">
-      <Accordion fluid styled>
-        <Accordion.Title
-          active={activeIndex === 0}
-          index={0}
-          onClick={handleClick}
-        >
-          <Icon name="dropdown" />
-          View Your Secret Role
-        </Accordion.Title>
-        <Accordion.Content active={activeIndex === 0}>
+    <Accordion fluid styled>
+      <Accordion.Title
+        active={activeIndex === 0}
+        index={0}
+        onClick={handleClick}
+      >
+        <Icon name="dropdown" />
+        View Your Secret Role
+      </Accordion.Title>
+      <Accordion.Content active={activeIndex === 0}>
+        <div>
+          {`Party Affiliation: ${player.party}`}
+        </div>
+        <div>
+          {`Role: ${player.role}`}
+        </div>
+        {showFascists && (
           <div>
-            {`Party Affiliation: ${player.party}`}
+            {`Other Fascists: ${otherFascistsString}`}
           </div>
-          <div>
-            {`Role: ${player.role}`}
-          </div>
-          {showFascists && (
-            <div>
-              {`Other Fascists: ${otherFascistsString}`}
-            </div>
-          )}
-        </Accordion.Content>
-      </Accordion>
-    </div>
+        )}
+      </Accordion.Content>
+    </Accordion>
   );
 };
 

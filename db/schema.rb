@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_20_042511) do
+ActiveRecord::Schema.define(version: 2020_04_23_015513) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,13 @@ ActiveRecord::Schema.define(version: 2020_04_20_042511) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "in_progress", default: false
     t.boolean "voting", default: false
+    t.string "deck", default: [], array: true
+    t.string "discard", default: [], array: true
+    t.string "vote_result"
+    t.boolean "legislative_session", default: false
+    t.string "draw", default: [], array: true
+    t.integer "liberal_policies", default: 0
+    t.integer "fascist_policies", default: 0
   end
 
   create_table "players", force: :cascade do |t|
@@ -33,6 +40,8 @@ ActiveRecord::Schema.define(version: 2020_04_20_042511) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "dead", default: false
     t.string "vote"
+    t.boolean "president", default: false
+    t.boolean "chancellor", default: false
     t.index ["game_id"], name: "index_players_on_game_id"
   end
 

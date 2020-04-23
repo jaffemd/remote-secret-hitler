@@ -1,19 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
+import { idSort } from './utils';
 
 const Players = ({ game, player }) => {
   const showVote = id => (!game.voting || player.id === id);
 
-  const players = !game ? [] : game.players.sort((a, b) => {
-    if (a.id > b.id) {
-      return 1;
-    }
-    if (b.id > a.id) {
-      return -1;
-    }
-    return 0;
-  });
+  const players = !game ? [] : game.players.sort(idSort);
 
   return Boolean(players.length) && (
     <Table celled unstackable>
@@ -31,22 +24,36 @@ const Players = ({ game, player }) => {
           host,
           id,
           vote,
+          chancellor,
+          president,
         }) => (
           <Table.Row key={name}>
             <Table.Cell>
-              <div className="name-cell">
-                <span>
-                  {name}
-                </span>
-                {(id === player?.id) && (
-                  <span className="you">
-                    You
+              <div>
+                <div className="name-cell">
+                  <span>
+                    {name}
                   </span>
+                  {(id === player?.id) && (
+                    <span className="bold-red">
+                      You
+                    </span>
+                  )}
+                  {host && (
+                    <span className="bold-navy">
+                      Host
+                    </span>
+                  )}
+                </div>
+                {president && (
+                  <div className="player-government-role">
+                    President
+                  </div>
                 )}
-                {host && (
-                  <span className="bold-navy">
-                    Host
-                  </span>
+                {chancellor && (
+                  <div className="player-government-role">
+                    Chancellor
+                  </div>
                 )}
               </div>
             </Table.Cell>
@@ -82,7 +89,9 @@ Players.propTypes = {
     name: PropTypes.string,
     id: PropTypes.number,
     host: PropTypes.bool,
-    vote: PropTypes.bool,
+    vote: PropTypes.string,
+    chancellor: PropTypes.bool,
+    president: PropTypes.bool,
   }),
 };
 Players.defaultProps = { game: undefined, player: undefined };

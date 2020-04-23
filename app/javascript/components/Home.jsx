@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 import { Button, Input } from 'semantic-ui-react';
 import useLocalStorage from './hooks/useLocalStorage';
 
@@ -9,18 +9,18 @@ const Home = () => {
   const [roomCode, setRoomCode] = useState();
   const [error, setError] = useState();
   const history = useHistory();
-  const [playerCookie, setPlayerCookie] = useLocalStorage('remote-secret-hitler');
+  const [, setPlayerCookie] = useLocalStorage('remote-secret-hitler');
 
   const handleCreateClick = () => {
-    const data = { name };
+    const formData = { name };
     fetch('/api/v1/games', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(formData),
     }).then(response => response.json())
-      .then(data => {
+      .then((data) => {
         if (data.player) {
           setPlayerCookie({ [data.game.room_code]: data.player });
         }
@@ -35,16 +35,16 @@ const Home = () => {
   }, [game]);
 
   const handleSubmit = () => {
-    const data = { name, room_code: roomCode };
+    const formData = { name, room_code: roomCode };
     fetch('/api/v1/games/join', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(formData),
     })
       .then(response => response.json())
-      .then(data => {
+      .then((data) => {
         if (data.error) {
           setError(data.error);
         } else {
