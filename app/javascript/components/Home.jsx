@@ -57,7 +57,7 @@ const Home = () => {
   return (
     <div className="home">
       <h3 className="hitler-header">
-        Remote Secret Hitler
+        Zoom Secret Hitler
       </h3>
       <div className="home-enter-name">
         <div>Enter your name: </div>

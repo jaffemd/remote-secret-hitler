@@ -201,3 +201,10 @@ div.ui.segment {
 .emoji {
   font-size: 40px;
 }
+
+.log-back-in {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-row-gap: 10px;
+  align-items: center;
+}

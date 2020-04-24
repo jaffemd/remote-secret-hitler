@@ -26,5 +26,6 @@ module.exports = {
     "strict": 0,
     "arrow-parens": 0,
     "camelcase": 0,
+    'react/jsx-curly-brace-presence': 0
   },
 };

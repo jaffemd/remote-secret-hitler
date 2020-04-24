@@ -9,30 +9,18 @@ module Setup
     end
 
     def draw_policies(deck, discard)
-      if deck.length >= 3
-        draw = deck[0, 3]
-        deck = deck[3, deck.length - 3]
-
-        if deck.length == 0
-          deck = discard.clone.shuffle
-          discard = []
-        end
-
-        return {
-          deck: deck,
-          draw: draw,
-          discard: discard,
-        }
+      if deck.length <= 2
+        deck = [deck + discard].clone.shuffle
+        discard = []
       end
 
-      cards_left = deck.length
-      draw = deck[0, cards_left]
-      deck = discard.clone.shuffle
-      discard = []
+      draw = deck[0, 3]
+      deck = deck[3, deck.length - 3]
 
-      cards_needed = 3 - cards_left
-      draw[cards_left, cards_needed] = deck[0, cards_needed]
-      deck = deck[cards_needed, deck.length - cards_needed]
+      if deck.length <= 2
+        deck = [deck + discard].clone.shuffle
+        discard = []
+      end
 
       return {
         deck: deck,

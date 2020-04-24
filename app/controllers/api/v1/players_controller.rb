@@ -6,6 +6,9 @@ class Api::V1::PlayersController < ApplicationController
 
     game = Game.find_by(room_code: params[:room_code])
     host = game.players.empty?
+    if Player.find_by(game: game, name: params[:name])
+      render json: { error: 'A player with that name already exists' } and return
+    end
     player = Player.create(name: params[:name], game: game, host: host)
 
     render json: player

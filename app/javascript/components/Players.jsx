@@ -14,6 +14,9 @@ const Players = ({ game, player }) => {
         <Table.Row>
           <Table.HeaderCell>Players</Table.HeaderCell>
           {game?.in_progress && (
+            <Table.HeaderCell>Position</Table.HeaderCell>
+          )}
+          {game?.in_progress && (
             <Table.HeaderCell>Vote</Table.HeaderCell>
           )}
         </Table.Row>
@@ -29,22 +32,24 @@ const Players = ({ game, player }) => {
         }) => (
           <Table.Row key={name}>
             <Table.Cell>
-              <div>
-                <div className="name-cell">
-                  <span>
-                    {name}
+              <div className="name-cell">
+                <span>
+                  {name}
+                </span>
+                {(id === player?.id) && (
+                  <span className="bold-red">
+                    You
                   </span>
-                  {(id === player?.id) && (
-                    <span className="bold-red">
-                      You
-                    </span>
-                  )}
-                  {host && (
-                    <span className="bold-navy">
-                      Host
-                    </span>
-                  )}
-                </div>
+                )}
+                {host && (
+                  <span className="bold-navy">
+                    Host
+                  </span>
+                )}
+              </div>
+            </Table.Cell>
+            {game.in_progress && (
+              <Table.Cell>
                 {president && (
                   <div className="player-government-role">
                     President
@@ -55,8 +60,8 @@ const Players = ({ game, player }) => {
                     Chancellor
                   </div>
                 )}
-              </div>
-            </Table.Cell>
+              </Table.Cell>
+            )}
             {game.in_progress && (
               <Table.Cell
                 positive={showVote(id) && vote === 'yes'}

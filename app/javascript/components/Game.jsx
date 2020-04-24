@@ -15,6 +15,7 @@ const Game = () => {
   const { id: roomCode } = useParams();
   const [name, setName] = useState('');
   const [game, setGame] = useState();
+  const [joinError, setJoinError] = useState();
 
   const [playerCookie, setPlayerCookie] = useLocalStorage('remote-secret-hitler', { [roomCode]: null });
   const cachedPlayer = playerCookie[roomCode];
@@ -41,10 +42,11 @@ const Game = () => {
   useInterval(fetchGame, 7000);
 
   const handleChange = (e) => {
+    setJoinError(undefined);
     setName(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const joinGame = () => {
     const formData = { name, room_code: roomCode };
     fetch('/api/v1/players', {
       method: 'post',
@@ -55,8 +57,12 @@ const Game = () => {
     })
       .then(response => response.json())
       .then((data) => {
-        setPlayerCookie({ [roomCode]: data });
-        fetchGame();
+        if (data.error) {
+          setJoinError(data.error);
+        } else {
+          setPlayerCookie({ [roomCode]: data });
+          fetchGame();
+        }
       });
   };
 
@@ -90,10 +96,16 @@ const Game = () => {
     || (player?.chancellor && draw?.length === 2)
   );
 
+  const rejoin = () => {
+    const existingPlayer = game.players.find(p => p.name === name);
+    setJoinError(undefined);
+    setPlayerCookie({ [roomCode]: existingPlayer });
+  };
+
   return (
     <div className="game">
       <h3 className="hitler-header">
-        Remote Secret Hitler
+        Zoom Secret Hitler
       </h3>
       {player && inProgress && (
         <Role
@@ -117,12 +129,28 @@ const Game = () => {
             placeholder="Name"
             size="small"
             onChange={handleChange}
+            error={Boolean(joinError)}
             action={{
-              onClick: handleSubmit,
+              onClick: joinGame,
               content: 'Submit',
               primary: true,
             }}
           />
+          {joinError && (
+            <>
+              <div className="join-error">
+                {"You can't use the same name as someone already in the game."}
+              </div>
+              <div className="log-back-in">
+                <div>
+                  {'Did you get disconnected and are trying to log back in? Do not use this to cheat and view another player\'s hand.'}
+                </div>
+                <Button size="small" onClick={rejoin}>
+                  Rejoin
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       )}
       {player && !host && !inProgress && (
