@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_23_015513) do
+ActiveRecord::Schema.define(version: 2020_04_26_005108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,16 @@ ActiveRecord::Schema.define(version: 2020_04_23_015513) do
     t.string "draw", default: [], array: true
     t.integer "liberal_policies", default: 0
     t.integer "fascist_policies", default: 0
+    t.integer "previous_president_id"
+    t.integer "previous_chancellor_id"
+    t.string "policy_played"
+    t.string "active_presidential_power"
+    t.string "next_presidential_power"
+    t.boolean "power_in_progress", default: false
+    t.integer "power_target_id"
+    t.boolean "chaos_ensued", default: false
+    t.integer "election_tracker", default: 0
+    t.index ["room_code"], name: "index_games_on_room_code", unique: true
   end
 
   create_table "players", force: :cascade do |t|

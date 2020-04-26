@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext, useEffect, useState } from 'react';
 import { Dropdown, Button, Segment } from 'semantic-ui-react';
-import { idSort } from './utils';
+import GameContext from './GameContext';
+import { putGameUpdate, playerOptions } from './utils';
 
-const putGameUpdate = ({ action, setGame, roomCode }) => () => {
-  fetch(`/api/v1/games/${roomCode}/${action}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(response => response.json())
-    .then(data => setGame(data));
-};
-
-const ElectionSetup = ({ game, setGame }) => {
-  const savedPresident = game?.players?.map(p => p.president)?.id;
-  const savedChancellor = game?.players?.map(p => p.chancellor)?.id;
+const ElectionSetup = () => {
+  const { game, setGame } = useContext(GameContext);
+  const savedPresident = game?.players?.find(p => p.president)?.id;
+  const savedChancellor = game?.players?.find(p => p.chancellor)?.id;
   const [president, setPresident] = useState(savedPresident);
   const [chancellor, setChancellor] = useState(savedChancellor);
 
@@ -28,20 +18,17 @@ const ElectionSetup = ({ game, setGame }) => {
   }, [savedChancellor]);
 
   const {
+    power_in_progress,
     room_code: roomCode,
     vote_result,
   } = game;
 
-  const playerOptions = game.players.sort(idSort).map(p => ({
-    key: p.id, text: p.name, value: p.id,
-  }));
-
-  const chancellorOptions = playerOptions.filter(p => p.value !== president);
-  const presidentOptions = playerOptions.filter(p => p.value !== chancellor);
+  const chancellorOptions = playerOptions(game).filter(p => p.value !== president);
+  const presidentOptions = playerOptions(game).filter(p => p.value !== chancellor);
 
   const openVoting = putGameUpdate({ action: 'open_voting', setGame, roomCode });
-
   const newElection = putGameUpdate({ action: 'new_election', setGame, roomCode });
+  const enactTopPolicy = putGameUpdate({ action: 'enact_top_policy', setGame, roomCode });
 
   const startLegislativeSession = putGameUpdate({
     action: 'legislative_session',
@@ -70,6 +57,10 @@ const ElectionSetup = ({ game, setGame }) => {
     setChancellor(value);
     setGovernmentRole({ role: 'chancellor', value });
   };
+
+  if (power_in_progress) {
+    return null;
+  }
 
   return (
     <Segment>
@@ -109,7 +100,7 @@ const ElectionSetup = ({ game, setGame }) => {
             <Button color="red" onClick={newElection}>
               Clear and start another election
             </Button>
-            <Button onClick={() => {}}>
+            <Button onClick={enactTopPolicy}>
               Reveal and enact policy on top of deck
             </Button>
           </>
@@ -119,12 +110,4 @@ const ElectionSetup = ({ game, setGame }) => {
   );
 };
 
-ElectionSetup.propTypes = {
-  game: PropTypes.shape({
-    vote_result: PropTypes.oneOf(['pass', 'fail']),
-    room_code: PropTypes.string,
-    players: PropTypes.array,
-  }).isRequired,
-  setGame: PropTypes.func.isRequired,
-};
 export default ElectionSetup;

@@ -10,7 +10,7 @@ module Setup
 
     def draw_policies(deck, discard)
       if deck.length <= 2
-        deck = [deck + discard].clone.shuffle
+        deck = (deck + discard).clone.shuffle
         discard = []
       end
 
@@ -18,7 +18,7 @@ module Setup
       deck = deck[3, deck.length - 3]
 
       if deck.length <= 2
-        deck = [deck + discard].clone.shuffle
+        deck = (deck + discard).clone.shuffle
         discard = []
       end
 

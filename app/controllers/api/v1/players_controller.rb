@@ -19,6 +19,6 @@ class Api::V1::PlayersController < ApplicationController
     player.update(vote: params[:vote])
     game = player.game
     game.check_voting_finished!
-    render json: game.to_json(include: :players)
+    render json: game.full_json
   end
 end

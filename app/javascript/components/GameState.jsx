@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext, useState } from 'react';
 import { Accordion, Icon } from 'semantic-ui-react';
+import GameContext from './GameContext';
+import { powersMap } from './utils';
 
-const GameState = ({ game }) => {
+const GameState = () => {
+  const { game } = useContext(GameContext);
   const [activeIndex, setActiveIndex] = useState(0);
   const handleClick = (e, titleProps) => {
     const { index } = titleProps;
@@ -11,7 +13,9 @@ const GameState = ({ game }) => {
   };
 
   const {
+    election_tracker = 0,
     liberal_policies = 0,
+    next_presidential_power,
     fascist_policies = 0,
     deck = [],
     discard = [],
@@ -32,6 +36,11 @@ const GameState = ({ game }) => {
           <div className="policies-header">
             Policies Enacted
           </div>
+          {fascist_policies >= 3 && (
+            <div className="emphasis-center">
+              If Hitler is elected Chancellor, then the Fascists win.
+            </div>
+          )}
           <div className="policies">
             <div className="bold-navy">
               Liberal
@@ -40,13 +49,13 @@ const GameState = ({ game }) => {
               Fascist
             </div>
             <div className="bold-navy">
-              {liberal_policies}
+              {`${liberal_policies} (of 5)`}
             </div>
             <div className="bold-red">
-              {fascist_policies}
+              {`${fascist_policies} (of 6)`}
             </div>
           </div>
-          <div className="deck">
+          <div className="grid-equal-columns">
             <div>
               {`Deck: ${deck.length}`}
             </div>
@@ -54,16 +63,21 @@ const GameState = ({ game }) => {
               {`Discard: ${discard.length}`}
             </div>
           </div>
+          <div className="game-state-powers">
+            <div>
+              {'Presidential power granted upon the next fascist policy being played:'}
+            </div>
+            <div className="emphasis">
+              {powersMap[next_presidential_power] || 'None'}
+            </div>
+          </div>
+          <div className="text-center">
+            {`Elecion Tracker: ${election_tracker}`}
+          </div>
         </div>
       </Accordion.Content>
     </Accordion>
   );
 };
 
-GameState.propTypes = {
-  game: PropTypes.shape({
-    deck: PropTypes.array,
-    discard: PropTypes.array,
-  }).isRequired,
-};
 export default GameState;

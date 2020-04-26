@@ -29,10 +29,11 @@ const Players = ({ game, player }) => {
           vote,
           chancellor,
           president,
+          dead,
         }) => (
           <Table.Row key={name}>
             <Table.Cell>
-              <div className="name-cell">
+              <div className={`name-cell ${dead ? 'dead' : ''}`}>
                 <span>
                   {name}
                 </span>
@@ -50,6 +51,11 @@ const Players = ({ game, player }) => {
             </Table.Cell>
             {game.in_progress && (
               <Table.Cell>
+                {dead && (
+                  <div className="dead">
+                    Dead
+                  </div>
+                )}
                 {president && (
                   <div className="player-government-role">
                     President
@@ -67,6 +73,11 @@ const Players = ({ game, player }) => {
                 positive={showVote(id) && vote === 'yes'}
                 negative={showVote(id) && vote === 'no'}
               >
+                {dead && (
+                  <div className="dead">
+                    Dead
+                  </div>
+                )}
                 {game.voting && vote && player.id !== id && 'Voted'}
                 {showVote(id) && vote === 'yes' && 'Ja!'}
                 {showVote(id) && vote === 'no' && 'Nein!'}
