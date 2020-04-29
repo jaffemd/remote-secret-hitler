@@ -43,9 +43,11 @@ const JoinGame = ({ fetchGame, setPlayerCookie }) => {
 
   const inProgress = game?.in_progress;
 
+  const tooManyPlayers = game?.players >= 10;
+
   return (
     <div className="enter-name">
-      {!inProgress && (
+      {!inProgress && !tooManyPlayers && (
         <div>Join the action! Enter your name: </div>
       )}
       {inProgress && (
@@ -53,18 +55,20 @@ const JoinGame = ({ fetchGame, setPlayerCookie }) => {
           {'This game is already in progess. Got disconnected? Type your name in excactly and hit Join. Do not use this to cheat and view another player\'s hand. '}
         </div>
       )}
-      <Input
-        type="text"
-        placeholder="Name"
-        size="small"
-        onChange={handleChange}
-        error={Boolean(joinError)}
-        action={{
-          onClick: inProgress ? rejoin : joinGame,
-          content: 'Join',
-          primary: true,
-        }}
-      />
+      {(inProgress || !tooManyPlayers) && (
+        <Input
+          type="text"
+          placeholder="Name"
+          size="small"
+          onChange={handleChange}
+          error={Boolean(joinError)}
+          action={{
+            onClick: inProgress ? rejoin : joinGame,
+            content: 'Join',
+            primary: true,
+          }}
+        />
+      )}
       {joinError && (
         <>
           <div className="join-error">

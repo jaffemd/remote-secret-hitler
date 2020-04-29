@@ -7,6 +7,10 @@ const Players = ({ game, player }) => {
   const showVote = id => (!game.voting || player.id === id);
 
   const players = !game ? [] : game.players.sort(idSort);
+  const {
+    previous_chancellor_id,
+    previous_president_id,
+  } = game || {};
 
   return Boolean(players.length) && (
     <Table celled unstackable>
@@ -64,6 +68,16 @@ const Players = ({ game, player }) => {
                 {chancellor && (
                   <div className="player-government-role">
                     Chancellor
+                  </div>
+                )}
+                {!president && !chancellor && (id === previous_president_id) && (
+                  <div className="bold-red">
+                    Previous President
+                  </div>
+                )}
+                {!president && !chancellor && (id === previous_chancellor_id) && (
+                  <div className="bold-red">
+                    Previous Chancellor
                   </div>
                 )}
               </Table.Cell>

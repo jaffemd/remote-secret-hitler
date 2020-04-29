@@ -43,8 +43,6 @@ class Game < ApplicationRecord
     update(
       voting: true,
       vote_result: nil,
-      previous_president_id: nil,
-      previous_chancellor_id: nil,
       policy_played: nil,
       active_presidential_power: nil,
       power_in_progress: false,
@@ -85,10 +83,13 @@ class Game < ApplicationRecord
 
     update(
       vote_result: nil,
+      previous_president_id: nil,
+      previous_chancellor_id: nil,
       draw: draw_result[:draw],
       deck: draw_result[:deck],
       discard: draw_result[:discard],
       legislative_session: true,
+      election_tracker: 0,
     )
   end
 
@@ -97,6 +98,7 @@ class Game < ApplicationRecord
     if all_votes_in
       yes_votes = players.select { |player| player.vote == 'yes' }.length
       no_votes = players.select { |player| player.vote == 'no' }.length
+
       if yes_votes > no_votes
         failed_elections = 0
         result = 'pass'

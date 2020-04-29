@@ -72,7 +72,7 @@ const GameState = () => {
             </div>
           </div>
           <div className="text-center">
-            {`Elecion Tracker: ${election_tracker}`}
+            {`Election Tracker: ${election_tracker}`}
           </div>
         </div>
       </Accordion.Content>
