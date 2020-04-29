@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
 
-const Voting = ({ playerId, setGame }) => {
-  if (!playerId) {
+const Voting = ({ player, setGame }) => {
+  if (!player) {
     return null;
   }
 
   const handleClick = vote => () => {
     const formData = { vote };
-    fetch(`/api/v1/players/${playerId}/vote`, {
+    fetch(`/api/v1/players/${player.id}/vote`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -26,17 +26,30 @@ const Voting = ({ playerId, setGame }) => {
         VOTE VOTE VOTE VOTE VOTE!!!!
       </div>
       <Button.Group>
-        <Button primary onClick={handleClick('yes')}>Ja! (yes)</Button>
+        <Button
+          primary
+          onClick={handleClick('yes')}
+        >
+          Ja! (yes)
+        </Button>
         <Button.Or />
-        <Button color="red" onClick={handleClick('no')}>Nein! (no)</Button>
+        <Button
+          color="red"
+          onClick={handleClick('no')}
+        >
+          Nein! (no)
+        </Button>
       </Button.Group>
     </div>
   );
 };
 
 Voting.propTypes = {
-  playerId: PropTypes.number,
+  player: PropTypes.shape({
+    id: PropTypes.number,
+    vote: PropTypes.string,
+  }),
   setGame: PropTypes.func.isRequired,
 };
-Voting.defaultProps = { playerId: undefined };
+Voting.defaultProps = { player: undefined };
 export default Voting;

@@ -25,7 +25,7 @@ const PresidentialPowers = ({ player }) => {
   const specialElection = () => (
     <div>
       <span className="emphasis">
-        {`${previousPresident.name} gets to choose the next president.`}
+        {`${previousPresident.name} gets to choose the next president. `}
       </span>
       {'They may not choose themselves, but are allowed to pick the previous Chancellor. After the election, the presidential rotation picks up where it left off.'}
     </div>

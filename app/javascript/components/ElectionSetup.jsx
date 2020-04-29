@@ -21,6 +21,7 @@ const ElectionSetup = () => {
     power_in_progress,
     room_code: roomCode,
     vote_result,
+    election_tracker,
   } = game;
 
   const chancellorOptions = playerOptions(game).filter(p => p.value !== president);
@@ -94,13 +95,22 @@ const ElectionSetup = () => {
         )}
         {vote_result && (
           <>
-            <Button primary onClick={startLegislativeSession}>
+            <Button
+              color={vote_result === 'pass' ? 'green' : undefined}
+              onClick={startLegislativeSession}
+            >
               Start Legislative Session
             </Button>
-            <Button color="red" onClick={newElection}>
+            <Button
+              color={vote_result === 'fail' ? 'green' : undefined}
+              onClick={newElection}
+            >
               Clear and start another election
             </Button>
-            <Button onClick={enactTopPolicy}>
+            <Button
+              color={election_tracker >= 3 ? 'red' : undefined}
+              onClick={enactTopPolicy}
+            >
               Reveal and enact policy on top of deck
             </Button>
           </>

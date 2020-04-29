@@ -72,6 +72,8 @@ const Game = () => {
     in_progress: inProgress,
     legislative_session,
     draw,
+    liberal_policies,
+    fascist_policies,
   } = game || {};
 
   const showPolicyDraw = legislative_session && (
@@ -80,6 +82,11 @@ const Game = () => {
   );
 
   const showVoting = voting && !player?.dead;
+
+  const chancellor = (game?.players || []).find(p => p.chancellor);
+  const hitlerIsChancellor = fascist_policies >= 3
+    && vote_result === 'pass'
+    && chancellor?.role === 'Hitler';
 
   return (
     <GameContext.Provider value={{ game, setGame, roomCode }}>
@@ -102,6 +109,21 @@ const Game = () => {
         {player?.dead && (
           <div className="emphasis-center bold-red">
             You are dead. You may not speak, vote, or be elected to government. Do not reveal your party membership to the group unless you are Hitler. If you are Hitler, reveal that to the group and the game is over.
+          </div>
+        )}
+        {hitlerIsChancellor && (
+          <div className="emphasis-center bold-red">
+            Congratulations! You elected Hitler as Chancellor. The Fascists win!
+          </div>
+        )}
+        {fascist_policies >= 6 && (
+          <div className="emphasis-center bold-red">
+            The Fascists have successfully passed their agenda. Fascists win!
+          </div>
+        )}
+        {liberal_policies >= 5 && (
+          <div className="emphasis-center bold-navy">
+            The Liberals have passed their agenda and conquered Fascism. Liberals win!
           </div>
         )}
         {showPolicyDraw && <Policies />}
@@ -128,7 +150,7 @@ const Game = () => {
           <ElectionSetup />
         )}
         {showVoting && (
-          <Voting setGame={setGame} playerId={player?.id} />
+          <Voting setGame={setGame} player={player} />
         )}
         {vote_result && (
           <div>

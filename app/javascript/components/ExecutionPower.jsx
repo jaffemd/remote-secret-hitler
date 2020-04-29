@@ -62,9 +62,13 @@ const ExecutionPower = ({ player }) => {
       </div>
     );
   }
+  const isHitlerDeadString = deadPlayer.role === 'Hitler'
+    ? 'Hitler is dead. Liberals win!'
+    : 'They are NOT Hitler. The game continues.';
+
   return (
     <div className="bold-red emphasis-center">
-      {`${previousPresident.name} has murdered ${deadPlayer.name}`}
+      {`${previousPresident.name} has murdered ${deadPlayer.name}. ${isHitlerDeadString}`}
     </div>
   );
 };

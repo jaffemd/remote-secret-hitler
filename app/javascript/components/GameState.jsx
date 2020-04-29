@@ -65,14 +65,14 @@ const GameState = () => {
           </div>
           <div className="game-state-powers">
             <div>
-              {'Presidential power granted upon the next fascist policy being played:'}
+              {'Presidential power granted upon the next fascist policy being passed:'}
             </div>
             <div className="emphasis">
               {powersMap[next_presidential_power] || 'None'}
             </div>
           </div>
           <div className="text-center">
-            {`Election Tracker: ${election_tracker}`}
+            {`Failed Election Tracker: ${election_tracker} (of 3)`}
           </div>
         </div>
       </Accordion.Content>
