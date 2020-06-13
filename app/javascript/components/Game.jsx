@@ -50,7 +50,7 @@ const Game = () => {
   useInterval(fetchGame, 5000);
 
   const invite = () => {
-    copy(`Join my secret hitler game! Room Code: ${roomCode} ${window.location.href}`);
+    copy(`Join my secret hitler game! ${window.location.href}`);
   };
 
   const startGame = () => {
